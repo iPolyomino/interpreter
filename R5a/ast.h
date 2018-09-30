@@ -1,0 +1,286 @@
+//=====================================================================
+//
+//     ast.h: mini-C プログラムの抽象構文木 (ヘッダ)
+//
+//            コンパイラ実習  2004 (c) 平岡佑介, 石浦菜岐佐
+//
+//=====================================================================
+
+#ifndef INCLUDE_AST_H_
+#define INCLUDE_AST_H_
+
+#include <assert.h>
+#include <iostream>
+#include <string>
+#include <list>
+
+//---------------------------------------------------------------------
+//   Type
+//   型 (int か char) を表す列挙型
+//---------------------------------------------------------------------
+enum Type
+{
+  Type_INT,
+  Type_CHAR
+};
+
+//---------------------------------------------------------------------
+// Type_string
+// Type の表示用文字列
+//---------------------------------------------------------------------
+std::string Type_string(Type t);
+
+//---------------------------------------------------------------------
+//  Operator
+//  演算子を表す列挙型
+//---------------------------------------------------------------------
+enum Operator
+{
+  Operator_PLUS,  // +
+  Operator_MINUS, // -
+  Operator_MUL,   // *
+  Operator_DIV,   // /
+  Operator_MOD,   // %
+
+  Operator_LT, // <
+  Operator_GT, // >
+  Operator_LE, // <=
+  Operator_GE, // >=
+  Operator_NE, // !=
+  Operator_EQ, // ==
+};
+
+// static int tmp = 0;
+
+//---------------------------------------------------------------------
+//  Operator_string
+//  Operator の表示用文字列
+//---------------------------------------------------------------------
+std::string Operator_string(Operator o);
+
+//---------------------------------------------------------------------
+//  class Expression
+//  「式」の抽象基底
+//---------------------------------------------------------------------
+class Expression
+{
+private:
+  Expression(const Expression &);
+  Expression &operator=(const Expression &);
+
+public:
+  Expression() {}
+  virtual ~Expression() {}
+  virtual void print(std::ostream &os) const = 0;
+};
+
+//---------------------------------------------------------------------
+//  class Exp_constant
+//  式中の定数を表す
+//---------------------------------------------------------------------
+class Exp_constant : public Expression
+{
+private:
+  Type type_;
+  int value_;
+
+public:
+  Exp_constant(Type t, int i) : type_(t), value_(i) {}
+  ~Exp_constant() {}
+  const int value() const { return value_; }
+  const Type type() const { return type_; }
+  void print(std::ostream &os) const;
+};
+
+//---------------------------------------------------------------------
+//  class Exp_variable
+//  式中の変数を表す
+//---------------------------------------------------------------------
+class Exp_variable : public Expression
+{
+private:
+  std::string name_;
+
+public:
+  Exp_variable(const std::string &n) : name_(n) {}
+  ~Exp_variable() {}
+  const std::string &name() const { return name_; }
+  void print(std::ostream &os) const;
+};
+
+//---------------------------------------------------------------------
+//  class Exp_operation1
+//  単項演算子
+//---------------------------------------------------------------------
+class Exp_operation1 : public Expression
+{
+private:
+  Operator operation_;
+  Expression *operand_;
+
+public:
+  Exp_operation1(Operator op, Expression *ex) : operation_(op), operand_(ex) {}
+  ~Exp_operation1()
+  {
+    delete operand_;
+  }
+  const Operator operation() const
+  {
+    return operation_;
+  }
+  const Expression *operand() const
+  {
+    return operand_;
+  }
+  void print(std::ostream &os) const;
+};
+
+//---------------------------------------------------------------------
+//  class Exp_operation2
+//  二項演算子
+//---------------------------------------------------------------------
+class Exp_operation2 : public Expression
+{
+private:
+  Operator operation_;
+  Expression *operand1_;
+  Expression *operand2_;
+
+public:
+  Exp_operation2(Operator op, Expression *ex1, Expression *ex2) : operation_(op), operand1_(ex1), operand2_(ex2) {}
+  ~Exp_operation2()
+  {
+    delete operand1_;
+    delete operand2_;
+  }
+  const Operator operation() const
+  {
+    return operation_;
+  }
+  const Expression *operand1() const
+  {
+    return operand1_;
+  }
+  const Expression *operand2() const
+  {
+    return operand2_;
+  }
+  void print(std::ostream &os) const;
+};
+
+//---------------------------------------------------------------------
+//  class Exp_function
+//  関数式
+//---------------------------------------------------------------------
+class Exp_function : public Expression
+{
+private:
+  std::string name_;
+  std::list<Expression *> args_;
+
+public:
+  Exp_function(const std::string &nm, const std::list<Expression *> &args) : name_(nm), args_(args) {}
+  ~Exp_function();
+  const std::string &name() const
+  {
+    return name_;
+  }
+  const std::list<Expression *> &args() const
+  {
+    return args_;
+  }
+  void print(std::ostream &os) const;
+};
+
+//---------------------------------------------------------------------
+//  class Statement
+//  「文」の抽象基底
+//---------------------------------------------------------------------
+class Statement
+{
+private:
+  Statement(const Statement &);
+  Statement &operator=(const Statement &);
+
+public:
+  Statement() {}
+  virtual ~Statement() {}
+  virtual void print(std::ostream &os, int indent = 0) const = 0;
+};
+
+//---------------------------------------------------------------------
+//  class St_assign
+//  代入文
+//---------------------------------------------------------------------
+class St_assign : public Statement
+{
+private:
+  Exp_variable *lhs_;
+  Expression *rhs_;
+
+public:
+  St_assign(Exp_variable *lexp, Expression *rexp) : lhs_(lexp), rhs_(rexp) {}
+  ~St_assign()
+  {
+    delete lhs_;
+    delete rhs_;
+  }
+  const Exp_variable *lhs() const { return lhs_; }
+  const Expression *rhs() const { return rhs_; }
+  void print(std::ostream &os, int indent = 0) const;
+};
+
+//---------------------------------------------------------------------
+//  class St_list
+//  代入文
+//---------------------------------------------------------------------
+class St_list : public Statement
+{
+private:
+  std::list<Statement *> statements_;
+
+public:
+  St_list(const std::list<Statement *> &li) : statements_(li) {}
+  ~St_list();
+  const std::list<Statement *> &statements() const
+  {
+    return statements_;
+  }
+  void print(std::ostream &os, int indent = 0) const;
+};
+
+//---------------------------------------------------------------------
+//  class St_if
+//  代入文
+//---------------------------------------------------------------------
+class St_if : public Statement
+{
+private:
+  Expression *cond_;
+  Statement *then_;
+  Statement *else_;
+
+public:
+  St_if(Expression *cond, Statement *then, Statement *els) : cond_(cond), then_(then), else_(els) {}
+  ~St_if()
+  {
+    delete cond_;
+    delete then_;
+    delete else_;
+  }
+  const Expression *condition() const
+  {
+    return cond_;
+  }
+  const Statement *then_part() const
+  {
+    return then_;
+  }
+  const Statement *else_part() const
+  {
+    return else_;
+  }
+  void print(std::ostream &os, int indent = 0) const;
+};
+
+#endif // ifndef INCLUDE_AST_H_
