@@ -128,7 +128,6 @@ void Exp_operation1::print(std::ostream &os) const
 void Exp_operation2::print(std::ostream &os) const
 {
 
-  os << "( ";
   if (operand1())
   {
     operand1()->print(os);
@@ -146,7 +145,6 @@ void Exp_operation2::print(std::ostream &os) const
   {
     os << "UNDEF operand2";
   }
-  os << " )";
 }
 
 Exp_function::~Exp_function()
@@ -210,13 +208,13 @@ void St_list::print(std::ostream &os, int indent) const
   for (auto state : statements_)
   {
     os << tab(indent);
-    state->print(os);
+    state->print(os, indent);
   }
 }
 
 void St_if::print(std::ostream &os, int indent) const
 {
-  os << tab(indent) << "if ";
+  os << "if (";
   if (condition())
   {
     condition()->print(os);
@@ -225,16 +223,29 @@ void St_if::print(std::ostream &os, int indent) const
   {
     os << "UNDEF";
   }
-  os << " {" << std::endl;
-  os << tab(indent + 1);
-  then_part()->print(os);
+  os << ") {" << std::endl;
+  then_part()->print(os, indent + 1);
   os << tab(indent) << "}";
-
   if (else_part())
   {
     os << " else {" << std::endl;
-    os << tab(indent + 1);
-    else_part()->print(os);
+    else_part()->print(os, indent + 1);
     os << tab(indent) << "}" << std::endl;
   }
+}
+
+void St_while::print(std::ostream &os, int indent) const
+{
+  os << tab(indent) << "while (";
+  if (condition())
+  {
+    condition()->print(os);
+  }
+  else
+  {
+    os << "UNDEF";
+  }
+  os << ") {" << std::endl;
+  body()->print(os, indent + 1);
+  os << tab(indent) << "}" << std::endl;
 }

@@ -232,7 +232,7 @@ public:
 
 //---------------------------------------------------------------------
 //  class St_list
-//  代入文
+//  文の並び
 //---------------------------------------------------------------------
 class St_list : public Statement
 {
@@ -251,7 +251,7 @@ public:
 
 //---------------------------------------------------------------------
 //  class St_if
-//  代入文
+//  if文
 //---------------------------------------------------------------------
 class St_if : public Statement
 {
@@ -279,6 +279,34 @@ public:
   const Statement *else_part() const
   {
     return else_;
+  }
+  void print(std::ostream &os, int indent = 0) const;
+};
+
+//---------------------------------------------------------------------
+//  class St_while
+//  while文
+//---------------------------------------------------------------------
+class St_while : public Statement
+{
+private:
+  Expression *cond_;
+  Statement *body_;
+
+public:
+  St_while(Expression *cond, Statement *body) : cond_(cond), body_(body) {}
+  ~St_while()
+  {
+    delete cond_;
+    delete body_;
+  }
+  const Expression *condition() const
+  {
+    return cond_;
+  }
+  const Statement *body() const
+  {
+    return body_;
   }
   void print(std::ostream &os, int indent = 0) const;
 };
