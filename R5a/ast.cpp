@@ -270,36 +270,12 @@ void St_function::print(std::ostream &os, int indent) const
 
 void Variable::print(std::ostream &os) const
 {
-  if (type() == Type_INT)
-  {
-    os << "int";
-  }
-  else if (type() == Type_CHAR)
-  {
-    os << "char";
-  }
-  else
-  {
-    os << "UNDEF";
-  }
-  os << " " << name();
+  os << Type_string(type()) << " " << name();
 }
 
 void Function::print(std::ostream &os) const
 {
-  if (type() == Type_INT)
-  {
-    os << "int";
-  }
-  else if (type() == Type_CHAR)
-  {
-    os << "char";
-  }
-  else
-  {
-    os << "UNDEF";
-  }
-  os << " " << name() << "(";
+  os << Type_string(type()) << " " << name() << "(";
   bool isCommaRequired = false;
   for (auto arg : args_)
   {
