@@ -356,4 +356,28 @@ public:
   void print(std::ostream &os, int indent = 0) const;
 };
 
+//---------------------------------------------------------------------
+//  class Variable
+//  変数宣言
+//---------------------------------------------------------------------
+class Variable
+{
+private:
+  Type type_;
+  std::string name_;
+
+public:
+  Variable(Type type, const std::string &name) : type_(type), name_(name) {}
+  ~Variable() {}
+  Type type() const
+  {
+    return type_;
+  }
+  const std::string &name() const
+  {
+    return name_;
+  }
+  void print(std::ostream &os) const;
+};
+
 #endif // ifndef INCLUDE_AST_H_

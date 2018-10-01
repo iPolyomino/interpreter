@@ -269,3 +269,20 @@ void St_function::print(std::ostream &os, int indent) const
   function_.print(os);
   os << ";" << std::endl;
 }
+
+void Variable::print(std::ostream &os) const
+{
+  if (type() == Type_INT)
+  {
+    os << "int";
+  }
+  else if (type() == Type_CHAR)
+  {
+    os << "char";
+  }
+  else
+  {
+    os << "UNDEF";
+  }
+  os << " " << name();
+}
