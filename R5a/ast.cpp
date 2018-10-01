@@ -236,7 +236,7 @@ void St_if::print(std::ostream &os, int indent) const
 
 void St_while::print(std::ostream &os, int indent) const
 {
-  os << tab(indent) << "while (";
+  os << "while (";
   if (condition())
   {
     condition()->print(os);
@@ -248,4 +248,18 @@ void St_while::print(std::ostream &os, int indent) const
   os << ") {" << std::endl;
   body()->print(os, indent + 1);
   os << tab(indent) << "}" << std::endl;
+}
+
+void St_return::print(std::ostream &os, int indent) const
+{
+  os << "return ";
+  if (value())
+  {
+    value()->print(os);
+  }
+  else
+  {
+    os << "UNDEF";
+  }
+  os << ";" << std::endl;
 }

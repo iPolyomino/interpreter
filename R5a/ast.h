@@ -311,4 +311,26 @@ public:
   void print(std::ostream &os, int indent = 0) const;
 };
 
+//---------------------------------------------------------------------
+//  class St_return
+//  while文
+//---------------------------------------------------------------------
+class St_return : public Statement
+{
+private:
+  Expression *value_;
+
+public:
+  St_return(Expression *value) : value_(value) {}
+  ~St_return()
+  {
+    delete value_;
+  }
+  const Expression *value() const
+  {
+    return value_;
+  }
+  void print(std::ostream &os, int indent = 0) const;
+};
+
 #endif // ifndef INCLUDE_AST_H_
