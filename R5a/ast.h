@@ -313,7 +313,7 @@ public:
 
 //---------------------------------------------------------------------
 //  class St_return
-//  while文
+//  return文
 //---------------------------------------------------------------------
 class St_return : public Statement
 {
@@ -329,6 +329,29 @@ public:
   const Expression *value() const
   {
     return value_;
+  }
+  void print(std::ostream &os, int indent = 0) const;
+};
+
+//---------------------------------------------------------------------
+//  class St_function
+//  関数呼び出し文
+//---------------------------------------------------------------------
+class St_function : public Statement
+{
+private:
+  Exp_function function_;
+
+public:
+  St_function(const std::string &name, const std::list<Expression *> &args) : function_(name, args) {}
+  ~St_function() {}
+  const std::string &name() const
+  {
+    return function_.name();
+  }
+  const std::list<Expression *> &args() const
+  {
+    return function_.args();
   }
   void print(std::ostream &os, int indent = 0) const;
 };

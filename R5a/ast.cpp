@@ -263,3 +263,9 @@ void St_return::print(std::ostream &os, int indent) const
   }
   os << ";" << std::endl;
 }
+
+void St_function::print(std::ostream &os, int indent) const
+{
+  function_.print(os);
+  os << ";" << std::endl;
+}
