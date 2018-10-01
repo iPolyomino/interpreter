@@ -400,7 +400,7 @@ public:
       const std::list<Variable *> &args,
       const std::list<Variable *> &local_vars,
       Statement *body) : type_(type), name_(name), args_(args), local_vars_(local_vars), body_(body) {}
-  ~Function() {}
+  ~Function();
   Type type() const
   {
     return type_;
@@ -420,6 +420,38 @@ public:
   const Statement *body() const
   {
     return body_;
+  }
+  void print(std::ostream &os) const;
+};
+
+//---------------------------------------------------------------------
+//  class Program
+//  プログラム全体
+//---------------------------------------------------------------------
+class Program
+{
+private:
+  std::list<Variable *> vars_;
+  std::list<Function *> funcs_;
+  Function *main_;
+
+public:
+  Program(
+      const std::list<Variable *> &vars,
+      const std::list<Function *> &funcs,
+      Function *main) : vars_(vars), funcs_(funcs), main_(main) {}
+  ~Program();
+  const std::list<Variable *> &vars() const
+  {
+    return vars_;
+  }
+  const std::list<Function *> &funcs() const
+  {
+    return funcs_;
+  }
+  const Function *main() const
+  {
+    return main_;
   }
   void print(std::ostream &os) const;
 };

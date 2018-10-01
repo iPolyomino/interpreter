@@ -264,6 +264,7 @@ void St_return::print(std::ostream &os, int indent) const
 
 void St_function::print(std::ostream &os, int indent) const
 {
+  os << tab(indent);
   function_.print(os);
   os << ";" << std::endl;
 }
@@ -271,6 +272,19 @@ void St_function::print(std::ostream &os, int indent) const
 void Variable::print(std::ostream &os) const
 {
   os << Type_string(type()) << " " << name();
+}
+
+Function::~Function()
+{
+  for (auto arg : args_)
+  {
+    delete arg;
+  }
+  for (auto local_var : local_vars_)
+  {
+    delete local_var;
+  }
+  delete body_;
 }
 
 void Function::print(std::ostream &os) const
@@ -295,4 +309,31 @@ void Function::print(std::ostream &os) const
 
   body()->print(os, 1);
   os << "}" << std::endl;
+}
+
+Program::~Program()
+{
+  for (auto v : vars_)
+  {
+    delete v;
+  }
+  for (auto fn : funcs_)
+  {
+    delete fn;
+  }
+  delete main_;
+}
+
+void Program::print(std::ostream &os) const
+{
+  for (auto v : vars_)
+  {
+    v->print(os);
+    os << ";" << std::endl;
+  }
+  for (auto f : funcs_)
+  {
+    f->print(os);
+  }
+  main()->print(os);
 }

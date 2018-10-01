@@ -85,7 +85,48 @@ Function *make_function_asum()
 
 int main(void)
 {
-    Function *f = make_function_asum();
-    f->print(std::cout);
+    // global variable
+    Variable *var_g = new Variable(Type_INT, "g");
+    std::list<Variable *> vars;
+    vars.push_back(var_g);
+
+    // asum function
+    Function *asum = make_function_asum();
+    std::list<Function *> funcs;
+    funcs.push_back(asum);
+
+    // main function
+    std::list<Variable *> arglist;
+
+    Variable *var_a = new Variable(Type_INT, "a");
+    std::list<Variable *> local_vars;
+    local_vars.push_back(var_a);
+
+    Exp_variable *exp_var_g = new Exp_variable("g");
+    Expression *const_3 = new Exp_constant(Type_INT, 3);
+    Statement *g_sub_3 = new St_assign(exp_var_g, const_3);
+
+    Exp_variable *exp_var_a = new Exp_variable("a");
+    std::list<Expression *> arglist_g;
+    arglist_g.push_back(exp_var_g);
+    Expression *exp_asum = new Exp_function("asum", arglist_g);
+    Statement *a_sub_asum_g = new St_assign(exp_var_a, exp_asum);
+
+    std::list<Expression *> arglist_a;
+    arglist_a.push_back(exp_var_a);
+    Statement *statement_putint = new St_function("putint", arglist_a);
+
+    // body - St_list
+    std::list<Statement *> slist;
+    slist.push_back(g_sub_3);
+    slist.push_back(a_sub_asum_g);
+    slist.push_back(statement_putint);
+    Statement *body = new St_list(slist);
+
+    Function *main = new Function(Type_INT, "main", arglist, local_vars, body);
+
+    Program *p = new Program(vars, funcs, main);
+    p->print(std::cout);
+
     return 0;
 }
