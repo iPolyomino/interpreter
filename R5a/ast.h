@@ -380,4 +380,48 @@ public:
   void print(std::ostream &os) const;
 };
 
+//---------------------------------------------------------------------
+//  class Function
+//  関数宣言
+//---------------------------------------------------------------------
+class Function
+{
+private:
+  Type type_;
+  std::string name_;
+  std::list<Variable *> args_;
+  std::list<Variable *> local_vars_;
+  Statement *body_;
+
+public:
+  Function(
+      Type type,
+      const std::string &name,
+      const std::list<Variable *> &args,
+      const std::list<Variable *> &local_vars,
+      Statement *body) : type_(type), name_(name), args_(args), local_vars_(local_vars), body_(body) {}
+  ~Function() {}
+  Type type() const
+  {
+    return type_;
+  }
+  const std::string &name() const
+  {
+    return name_;
+  }
+  const std::list<Variable *> &args() const
+  {
+    return args_;
+  }
+  const std::list<Variable *> &local_vars() const
+  {
+    return local_vars_;
+  }
+  const Statement *body() const
+  {
+    return body_;
+  }
+  void print(std::ostream &os) const;
+};
+
 #endif // ifndef INCLUDE_AST_H_

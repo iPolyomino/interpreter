@@ -113,7 +113,7 @@ void Exp_variable::print(std::ostream &os) const
 
 void Exp_operation1::print(std::ostream &os) const
 {
-  os << "(" << Operator_string(operation());
+  os << Operator_string(operation());
   if (operand())
   {
     operand()->print(os);
@@ -122,7 +122,6 @@ void Exp_operation1::print(std::ostream &os) const
   {
     os << "UNDEF";
   }
-  os << ")";
 }
 
 void Exp_operation2::print(std::ostream &os) const
@@ -207,14 +206,13 @@ void St_list::print(std::ostream &os, int indent) const
 {
   for (auto state : statements_)
   {
-    os << tab(indent);
     state->print(os, indent);
   }
 }
 
 void St_if::print(std::ostream &os, int indent) const
 {
-  os << "if (";
+  os << tab(indent) << "if (";
   if (condition())
   {
     condition()->print(os);
@@ -236,7 +234,7 @@ void St_if::print(std::ostream &os, int indent) const
 
 void St_while::print(std::ostream &os, int indent) const
 {
-  os << "while (";
+  os << tab(indent) << "while (";
   if (condition())
   {
     condition()->print(os);
@@ -252,7 +250,7 @@ void St_while::print(std::ostream &os, int indent) const
 
 void St_return::print(std::ostream &os, int indent) const
 {
-  os << "return ";
+  os << tab(indent) << "return ";
   if (value())
   {
     value()->print(os);
@@ -285,4 +283,40 @@ void Variable::print(std::ostream &os) const
     os << "UNDEF";
   }
   os << " " << name();
+}
+
+void Function::print(std::ostream &os) const
+{
+  if (type() == Type_INT)
+  {
+    os << "int";
+  }
+  else if (type() == Type_CHAR)
+  {
+    os << "char";
+  }
+  else
+  {
+    os << "UNDEF";
+  }
+  os << " " << name() << "(";
+  bool isCommaRequired = false;
+  for (auto arg : args_)
+  {
+    if (isCommaRequired)
+    {
+      os << ", ";
+    }
+    arg->print(os);
+  }
+  os << ") {" << std::endl;
+  for (auto local_var : local_vars_)
+  {
+    os << tab(1);
+    local_var->print(os);
+    os << ";" << std::endl;
+  }
+
+  body()->print(os, 1);
+  os << "}" << std::endl;
 }
