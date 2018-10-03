@@ -146,6 +146,28 @@ void Exp_operation1::print(std::ostream &os) const
   os << ")";
 }
 
+int Exp_operation1::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  int op = 1;
+  if (operation() == Operator_MINUS)
+  {
+    op = -1;
+  }
+
+  if (operand())
+  {
+    return op * operand()->run(func, gvar, lvar);
+  }
+  else
+  {
+    std::cerr << "undefined operation" << std::endl;
+    exit(1);
+  }
+}
+
 void Exp_operation2::print(std::ostream &os) const
 {
   os << "(";

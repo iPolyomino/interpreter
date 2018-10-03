@@ -148,6 +148,10 @@ public:
     return operand_;
   }
   void print(std::ostream &os) const;
+  int run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------
