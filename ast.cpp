@@ -173,6 +173,14 @@ void Exp_function::print(std::ostream &os) const
   os << ")";
 }
 
+int Exp_function::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  return 0;
+}
+
 void St_assign::print(std::ostream &os, int indent) const
 {
   os << tab(indent);

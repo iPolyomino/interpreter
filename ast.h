@@ -13,6 +13,9 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <map>
+
+class Function;
 
 //---------------------------------------------------------------------
 //   Type
@@ -72,6 +75,10 @@ public:
   Expression() {}
   virtual ~Expression() {}
   virtual void print(std::ostream &os) const = 0;
+  virtual int run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const = 0;
 };
 
 //---------------------------------------------------------------------
@@ -90,6 +97,10 @@ public:
   const int value() const { return value_; }
   const Type type() const { return type_; }
   void print(std::ostream &os) const;
+  int run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const { return value(); }
 };
 
 //---------------------------------------------------------------------
@@ -190,6 +201,10 @@ public:
     return args_;
   }
   void print(std::ostream &os) const;
+  int run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------
