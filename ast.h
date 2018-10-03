@@ -117,6 +117,10 @@ public:
   ~Exp_variable() {}
   const std::string &name() const { return name_; }
   void print(std::ostream &os) const;
+  int run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------

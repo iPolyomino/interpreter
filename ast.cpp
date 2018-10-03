@@ -111,6 +111,27 @@ void Exp_variable::print(std::ostream &os) const
   os << name();
 }
 
+int Exp_variable::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  std::map<std::string, int>::const_iterator p;
+  if ((p = lvar.find(name())) != lvar.end())
+  {
+    return p->second;
+  }
+  else if ((p = gvar.find(name())) != gvar.end())
+  {
+    return p->second;
+  }
+  else
+  {
+    std::cerr << "undefined variable p" << std::endl;
+    exit(1);
+  }
+};
+
 void Exp_operation1::print(std::ostream &os) const
 {
   os << "(" << Operator_string(operation());
