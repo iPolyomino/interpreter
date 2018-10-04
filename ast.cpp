@@ -127,7 +127,7 @@ int Exp_variable::run(
   }
   else
   {
-    std::cerr << "undefined variable p" << std::endl;
+    std::cerr << "undefined variable: " << name() << std::endl;
     exit(1);
   }
 };
@@ -151,18 +151,19 @@ int Exp_operation1::run(
     std::map<std::string, int> &gvar,
     std::map<std::string, int> &lvar) const
 {
-  int op = 1;
-  if (operation() == Operator_MINUS)
+  if (operand() == NULL)
   {
-    op = -1;
+    std::cerr << "undefined operand" << std::endl;
+    exit(1);
   }
 
-  if (operand())
+  switch (operation())
   {
-    return op * operand()->run(func, gvar, lvar);
-  }
-  else
-  {
+  case Operator_PLUS:
+    return operand()->run(func, gvar, lvar);
+  case Operator_MINUS:
+    return -operand()->run(func, gvar, lvar);
+  default:
     std::cerr << "undefined operation" << std::endl;
     exit(1);
   }
@@ -189,6 +190,55 @@ void Exp_operation2::print(std::ostream &os) const
     os << "UNDEF operand2";
   }
   os << ")";
+}
+
+int Exp_operation2::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  if (operand1() == NULL)
+  {
+    std::cerr << "undefined operand1" << std::endl;
+    exit(1);
+  }
+  if (operand2() == NULL)
+  {
+    std::cerr << "undefined operand2" << std::endl;
+    exit(1);
+  }
+
+  int op1 = operand1()->run(func, gvar, lvar);
+  int op2 = operand2()->run(func, gvar, lvar);
+
+  switch (operation())
+  {
+  case Operator_PLUS:
+    return op1 + op2;
+  case Operator_MINUS:
+    return op1 - op2;
+  case Operator_MUL:
+    return op1 * op2;
+  case Operator_DIV:
+    return op1 / op2;
+  case Operator_MOD:
+    return op1 % op2;
+  case Operator_LT:
+    return op1 < op2;
+  case Operator_GT:
+    return op1 > op2;
+  case Operator_LE:
+    return op1 <= op2;
+  case Operator_GE:
+    return op1 >= op2;
+  case Operator_NE:
+    return op1 != op2;
+  case Operator_EQ:
+    return op1 == op2;
+  default:
+    std::cerr << "undefined operation" << std::endl;
+    exit(1);
+  }
 }
 
 Exp_function::~Exp_function()
