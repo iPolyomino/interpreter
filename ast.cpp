@@ -271,7 +271,51 @@ int Exp_function::run(
     std::map<std::string, int> &gvar,
     std::map<std::string, int> &lvar) const
 {
-  return 0;
+  std::list<int> i_args;
+  for (auto item : args())
+  {
+    i_args.push_back(item->run(func, gvar, lvar));
+  }
+
+  std::map<std::string, Function *>::const_iterator p;
+
+  if (name() == "getint")
+  {
+    int i;
+    std::cin >> i;
+    return i;
+  }
+  else if (name() == "getchar")
+  {
+    char c;
+    std::cin >> c;
+    return c;
+  }
+  else if (name() == "putint")
+  {
+    int i = i_args.front();
+    std::cout << i;
+    return 0;
+  }
+  else if (name() == "putchar")
+  {
+    char c = i_args.front();
+    std::cout << c;
+    return 0;
+  }
+  else
+  {
+    if ((p = func.find(name())) != func.end())
+    {
+      Function *f = p->second;
+      return f->run(func, gvar, i_args);
+    }
+    else
+    {
+      std::cerr << "undefined function " << name() << std::endl;
+      exit(1);
+    }
+  }
 }
 
 void St_assign::print(std::ostream &os, int indent) const
@@ -412,6 +456,14 @@ void Function::print(std::ostream &os) const
 
   body()->print(os, 1);
   os << "}" << std::endl;
+}
+
+int Function::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::list<int> &i_args) const
+{
+  return i_args.front();
 }
 
 Program::~Program()
