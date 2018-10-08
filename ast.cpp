@@ -522,6 +522,15 @@ void St_function::print(std::ostream &os, int indent) const
   os << ";" << std::endl;
 }
 
+Return_t St_function::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  function_.run(func, gvar, lvar);
+  return Return_t(false, 0);
+}
+
 void Variable::print(std::ostream &os) const
 {
   os << Type_string(type()) << " " << name();
