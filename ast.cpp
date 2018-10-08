@@ -475,6 +475,22 @@ void St_while::print(std::ostream &os, int indent) const
   os << tab(indent) << "}" << std::endl;
 }
 
+Return_t St_while::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  while (condition()->run(func, gvar, lvar))
+  {
+    Return_t rd = body()->run(func, gvar, lvar);
+    if (rd.var_is_returned)
+    {
+      return rd;
+    }
+  }
+  return Return_t(false, 0);
+}
+
 void St_return::print(std::ostream &os, int indent) const
 {
   os << tab(indent) << "return ";
