@@ -17,6 +17,14 @@
 
 class Function;
 
+struct Return_t
+{
+  bool var_is_returned;
+  int return_val;
+  Return_t() : var_is_returned(false), return_val(0) {}
+  Return_t(bool r, int v) : var_is_returned(r), return_val(v) {}
+};
+
 //---------------------------------------------------------------------
 //   Type
 //   型 (int か char) を表す列挙型
@@ -233,6 +241,10 @@ public:
   Statement() {}
   virtual ~Statement() {}
   virtual void print(std::ostream &os, int indent = 0) const = 0;
+  virtual Return_t run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const = 0;
 };
 
 //---------------------------------------------------------------------
@@ -255,6 +267,10 @@ public:
   const Exp_variable *lhs() const { return lhs_; }
   const Expression *rhs() const { return rhs_; }
   void print(std::ostream &os, int indent = 0) const;
+  virtual Return_t run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------

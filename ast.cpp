@@ -341,6 +341,40 @@ void St_assign::print(std::ostream &os, int indent) const
   os << ";" << std::endl;
 }
 
+Return_t St_assign::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  if (lhs() == NULL)
+  {
+    std::cerr << "undefined lhs" << std::endl;
+    exit(1);
+  }
+  if (rhs() == NULL)
+  {
+    std::cerr << "undefined rhs" << std::endl;
+  }
+
+  int i_rhs = rhs()->run(func, gvar, lvar);
+  std::map<std::string, int>::const_iterator p;
+
+  if ((p = lvar.find(lhs()->name())) != lvar.end())
+  {
+    lvar[lhs()->name()] = i_rhs;
+  }
+  else if ((p = gvar.find(lhs()->name())) != gvar.end())
+  {
+    gvar[lhs()->name()] = i_rhs;
+  }
+  else
+  {
+    std::cerr << "undefined variable: " << lhs()->name() << std::endl;
+    exit(1);
+  }
+  return Return_t(false, 0);
+}
+
 St_list::~St_list()
 {
   for (auto state : statements_)
