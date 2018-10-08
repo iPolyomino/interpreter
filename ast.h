@@ -267,7 +267,7 @@ public:
   const Exp_variable *lhs() const { return lhs_; }
   const Expression *rhs() const { return rhs_; }
   void print(std::ostream &os, int indent = 0) const;
-  virtual Return_t run(
+  Return_t run(
       std::map<std::string, Function *> &func,
       std::map<std::string, int> &gvar,
       std::map<std::string, int> &lvar) const;
@@ -290,7 +290,7 @@ public:
     return statements_;
   }
   void print(std::ostream &os, int indent = 0) const;
-  virtual Return_t run(
+  Return_t run(
       std::map<std::string, Function *> &func,
       std::map<std::string, int> &gvar,
       std::map<std::string, int> &lvar) const;
@@ -328,6 +328,10 @@ public:
     return else_;
   }
   void print(std::ostream &os, int indent = 0) const;
+  Return_t run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------

@@ -429,6 +429,36 @@ void St_if::print(std::ostream &os, int indent) const
   }
 }
 
+Return_t St_if::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  if (condition()->run(func, gvar, lvar))
+  {
+    if (then_part() != NULL)
+    {
+      Return_t rd = then_part()->run(func, gvar, lvar);
+      if (rd.var_is_returned)
+      {
+        return rd;
+      }
+    }
+  }
+  else
+  {
+    if (else_part() != NULL)
+    {
+      Return_t rd = else_part()->run(func, gvar, lvar);
+      if (rd.var_is_returned)
+      {
+        return rd;
+      }
+    }
+  }
+  return Return_t(false, 0);
+}
+
 void St_while::print(std::ostream &os, int indent) const
 {
   os << tab(indent) << "while (";
