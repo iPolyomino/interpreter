@@ -290,6 +290,10 @@ public:
     return statements_;
   }
   void print(std::ostream &os, int indent = 0) const;
+  virtual Return_t run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------

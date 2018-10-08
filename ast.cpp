@@ -391,6 +391,22 @@ void St_list::print(std::ostream &os, int indent) const
   }
 }
 
+Return_t St_list::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  for (auto st : statements())
+  {
+    Return_t rd = st->run(func, gvar, lvar);
+    if (rd.var_is_returned)
+    {
+      return rd;
+    }
+  }
+  return Return_t(false, 0);
+}
+
 void St_if::print(std::ostream &os, int indent) const
 {
   os << tab(indent) << "if (";
