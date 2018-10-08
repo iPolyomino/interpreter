@@ -272,7 +272,7 @@ int Exp_function::run(
     std::map<std::string, int> &lvar) const
 {
   std::list<int> i_args;
-  for (auto item : args())
+  for (auto item : args_)
   {
     i_args.push_back(item->run(func, gvar, lvar));
   }
@@ -396,7 +396,7 @@ Return_t St_list::run(
     std::map<std::string, int> &gvar,
     std::map<std::string, int> &lvar) const
 {
-  for (auto st : statements())
+  for (auto st : statements_)
   {
     Return_t rd = st->run(func, gvar, lvar);
     if (rd.val_is_returned)
@@ -578,7 +578,27 @@ int Function::run(
     std::map<std::string, int> &gvar,
     std::list<int> &i_args) const
 {
-  return i_args.front();
+  std::map<std::string, int> lvar;
+  std::list<int> i_args_copy(i_args);
+
+  for (auto arg : args_)
+  {
+    if (i_args.empty())
+    {
+      std::cerr << "Invalid length of argument." << std::endl;
+      exit(1);
+    }
+    lvar[arg->name()] = i_args_copy.front();
+    i_args_copy.pop_front();
+  }
+
+  for (auto local_var : local_vars_)
+  {
+    lvar[local_var->name()] = 0;
+  }
+
+  Return_t rd = body()->run(func, gvar, lvar);
+  return rd.return_val;
 }
 
 Program::~Program()
