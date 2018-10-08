@@ -521,6 +521,7 @@ public:
     return main_;
   }
   void print(std::ostream &os) const;
+  int run() const;
 };
 
 #endif // ifndef INCLUDE_AST_H_

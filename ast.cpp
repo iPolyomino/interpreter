@@ -627,3 +627,22 @@ void Program::print(std::ostream &os) const
   }
   main()->print(os);
 }
+
+int Program::run() const
+{
+  std::map<std::string, int> gvar;
+  for (auto v : vars_)
+  {
+    gvar[v->name()];
+  }
+
+  std::map<std::string, Function *> func;
+  for (auto f : funcs_)
+  {
+    func[f->name()] = f;
+  }
+
+  std::list<int> iargs;
+  int v = main()->run(func, gvar, iargs);
+  return v;
+}
