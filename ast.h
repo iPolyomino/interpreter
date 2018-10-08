@@ -19,10 +19,10 @@ class Function;
 
 struct Return_t
 {
-  bool var_is_returned;
+  bool val_is_returned;
   int return_val;
-  Return_t() : var_is_returned(false), return_val(0) {}
-  Return_t(bool r, int v) : var_is_returned(r), return_val(v) {}
+  Return_t() : val_is_returned(false), return_val(0) {}
+  Return_t(bool r, int v) : val_is_returned(r), return_val(v) {}
 };
 
 //---------------------------------------------------------------------
@@ -386,6 +386,10 @@ public:
     return value_;
   }
   void print(std::ostream &os, int indent = 0) const;
+  Return_t run(
+      std::map<std::string, Function *> &func,
+      std::map<std::string, int> &gvar,
+      std::map<std::string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------

@@ -399,7 +399,7 @@ Return_t St_list::run(
   for (auto st : statements())
   {
     Return_t rd = st->run(func, gvar, lvar);
-    if (rd.var_is_returned)
+    if (rd.val_is_returned)
     {
       return rd;
     }
@@ -439,7 +439,7 @@ Return_t St_if::run(
     if (then_part() != NULL)
     {
       Return_t rd = then_part()->run(func, gvar, lvar);
-      if (rd.var_is_returned)
+      if (rd.val_is_returned)
       {
         return rd;
       }
@@ -450,7 +450,7 @@ Return_t St_if::run(
     if (else_part() != NULL)
     {
       Return_t rd = else_part()->run(func, gvar, lvar);
-      if (rd.var_is_returned)
+      if (rd.val_is_returned)
       {
         return rd;
       }
@@ -483,7 +483,7 @@ Return_t St_while::run(
   while (condition()->run(func, gvar, lvar))
   {
     Return_t rd = body()->run(func, gvar, lvar);
-    if (rd.var_is_returned)
+    if (rd.val_is_returned)
     {
       return rd;
     }
@@ -503,6 +503,16 @@ void St_return::print(std::ostream &os, int indent) const
     os << "UNDEF";
   }
   os << ";" << std::endl;
+}
+
+Return_t St_return::run(
+    std::map<std::string, Function *> &func,
+    std::map<std::string, int> &gvar,
+    std::map<std::string, int> &lvar) const
+{
+  assert(value());
+  int rv = value()->run(func, gvar, lvar);
+  return Return_t(true, rv);
 }
 
 void St_function::print(std::ostream &os, int indent) const
