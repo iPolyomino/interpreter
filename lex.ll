@@ -30,6 +30,8 @@ int linenum;
 *********************************************************************/
 %}
 %%
+[ \t\r]  {}
+"\n"     {linenum++;}
 
 "char"   { return lex_KW_CHAR; }
 "int"    { return lex_KW_INT; }
