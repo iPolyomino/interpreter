@@ -35,6 +35,10 @@ int linenum;
 
 "char"   { return lex_KW_CHAR; }
 "int"    { return lex_KW_INT; }
+"else"   { return lex_KW_ELSE; }
+"if"     { return lex_KW_IF; }
+"return" { return lex_KW_RETURN; }
+"while"  { return lex_KW_WHILE; }
 
 "&"      { return lex_AND; }
 "=="     { return lex_EQEQ; }
