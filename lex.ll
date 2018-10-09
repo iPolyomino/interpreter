@@ -67,6 +67,7 @@ id [a-zA-Z_][a-zA-Z_0-9]*
 
 {num} { sscanf(yytext, "%d", &yylval.val); return lex_INT; }
 {id}  { yylval.string = strdup(yytext); return lex_ID; }
+"'"."'" { yylval.val = yytext[1]; return lex_CHAR; }
 .     { fprintf(stderr, "%d: 不正な文字 '%c'\n", linenum, yytext[0]); exit(4); }
 
 %%
