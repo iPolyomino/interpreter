@@ -23,6 +23,8 @@ int linenum;
 *********************************************************************/
 %}
 
+num [0-9]+
+
 %{
 /*********************************************************************
    C パート (%% の行から次の %% の行まで)
@@ -62,6 +64,7 @@ int linenum;
 "["      { return lex_LBRACK;}
 "]"      { return lex_RBRACK;}
 
+{num} {sscanf(yytext, "%d", &yylval.val); return lex_INT;}
 
 .     { fprintf(stderr, "%d: 不正な文字 '%c'\n", linenum, yytext[0]); exit(4);}
 
