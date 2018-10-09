@@ -34,14 +34,34 @@ int linenum;
 "\n"     {linenum++;}
 
 "char"   { return lex_KW_CHAR; }
-"int"    { return lex_KW_INT; }
 "else"   { return lex_KW_ELSE; }
 "if"     { return lex_KW_IF; }
+"int"    { return lex_KW_INT; }
 "return" { return lex_KW_RETURN; }
 "while"  { return lex_KW_WHILE; }
 
+"+"      { return lex_PLUS; }
+"-"      { return lex_MINUS; }
+"*"      { return lex_STAR; }
+"/"      { return lex_SLASH; }
+"%"      { return lex_PERCENT; }
 "&"      { return lex_AND; }
+"="      { return lex_EQ; }
 "=="     { return lex_EQEQ; }
+"!="     { return lex_NE; }
+">"      { return lex_GT; }
+">="     { return lex_GE; }
+"<"      { return lex_LT; }
+"<="     { return lex_LE; }
+","      { return lex_COMMA; }
+";"      { return lex_SEMICOLON; }
+"("      { return lex_LPAREN;}
+")"      { return lex_RPAREN;}
+"{"      { return lex_LBRACE;}
+"}"      { return lex_RBRACE;}
+"["      { return lex_LBRACK;}
+"]"      { return lex_RBRACK;}
+
 
 .     { fprintf(stderr, "%d: 不正な文字 '%c'\n", linenum, yytext[0]); exit(4);}
 
