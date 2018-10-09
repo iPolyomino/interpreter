@@ -24,6 +24,7 @@ int linenum;
 %}
 
 num [0-9]+
+id [a-zA-Z_][a-zA-Z_0-9]*
 
 %{
 /*********************************************************************
@@ -33,7 +34,7 @@ num [0-9]+
 %}
 %%
 [ \t\r]  {}
-"\n"     {linenum++;}
+"\n"     { linenum++; }
 
 "char"   { return lex_KW_CHAR; }
 "else"   { return lex_KW_ELSE; }
@@ -57,16 +58,16 @@ num [0-9]+
 "<="     { return lex_LE; }
 ","      { return lex_COMMA; }
 ";"      { return lex_SEMICOLON; }
-"("      { return lex_LPAREN;}
-")"      { return lex_RPAREN;}
-"{"      { return lex_LBRACE;}
-"}"      { return lex_RBRACE;}
-"["      { return lex_LBRACK;}
-"]"      { return lex_RBRACK;}
+"("      { return lex_LPAREN; }
+")"      { return lex_RPAREN; }
+"{"      { return lex_LBRACE; }
+"}"      { return lex_RBRACE; }
+"["      { return lex_LBRACK; }
+"]"      { return lex_RBRACK; }
 
-{num} {sscanf(yytext, "%d", &yylval.val); return lex_INT;}
-
-.     { fprintf(stderr, "%d: 不正な文字 '%c'\n", linenum, yytext[0]); exit(4);}
+{num} { sscanf(yytext, "%d", &yylval.val); return lex_INT; }
+{id}  { yylval.string = strdup(yytext); return lex_ID; }
+.     { fprintf(stderr, "%d: 不正な文字 '%c'\n", linenum, yytext[0]); exit(4); }
 
 %%
 
