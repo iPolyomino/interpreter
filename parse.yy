@@ -59,6 +59,7 @@ void yyerror(const char*);
 // [Part-4] 型の宣言 
 // -------------------------------------------------------------------- 
 
+%type <expression> expression
 %type <expression> expression2
 %type <expression> expression3
 %type <expression> expression4
@@ -76,10 +77,40 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
   
 program
-: expression2
+: expression
 {
   $1->print(std::cout);
   std::cout << std::endl;
+}
+
+expression
+: expression2
+{
+  $$ = $1;
+}
+| expression lex_LT expression2
+{
+  $$ = new Exp_operation2(Operator_LT, $1, $3);
+}
+| expression lex_GT expression2
+{
+  $$ = new Exp_operation2(Operator_GT, $1, $3);
+}
+| expression lex_LE expression2
+{
+  $$ = new Exp_operation2(Operator_LE, $1, $3);
+}
+| expression lex_GE expression2
+{
+  $$ = new Exp_operation2(Operator_GE, $1, $3);
+}
+| expression lex_EQEQ expression2
+{
+  $$ = new Exp_operation2(Operator_EQ, $1, $3);
+}
+| expression lex_NE expression2
+{
+  $$ = new Exp_operation2(Operator_NE, $1, $3);
 }
 
 expression2
