@@ -31,6 +31,7 @@ void yyerror(const char*);
   int val;
   Expression* expression;
   Exp_variable* exp_variable;
+  std::list<Expression*>* explist;
 }  
  
 // --------------------------------------------------------------------  
@@ -53,7 +54,7 @@ void yyerror(const char*);
 %token lex_LBRACK lex_RBRACK
   
 %token <val> lex_INT lex_CHAR 
-%token <string> lex_ID  
+%token <string> lex_ID
   
 // --------------------------------------------------------------------  
 // [Part-4] 型の宣言 
@@ -64,6 +65,8 @@ void yyerror(const char*);
 %type <expression> expression3
 %type <expression> expression4
 %type <exp_variable> exp_variable
+%type <expression> exp_function
+%type <explist> explist
 
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
@@ -170,11 +173,38 @@ expression4
 {
   $$ = $2;
 }
+| exp_function
+{
+  $$ = $1;
+}
 
 exp_variable
 : lex_ID
 {
   $$ = new Exp_variable($1);
+}
+
+exp_function
+: lex_ID lex_LPAREN explist lex_RPAREN
+{
+  $$ = new Exp_function($1, *$3);
+  delete $3;
+}
+
+explist
+:
+{
+  $$ = new std::list<Expression*>;
+}
+| expression
+{
+  $$ = new std::list<Expression*>;
+  $$->push_back($1);
+}
+| explist lex_COMMA expression
+{
+  $1->push_back($3);
+  $$ = $1;
 }
 
 %%  
