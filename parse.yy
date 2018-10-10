@@ -278,8 +278,10 @@ st_if
   $$ = new St_if($3, $5, $7);
 }
 
-st_while: {
-
+st_while
+: lex_KW_WHILE lex_LPAREN expression lex_RPAREN statement
+{
+  $$ = new St_while($3, $5);
 }
 
 st_return: {
