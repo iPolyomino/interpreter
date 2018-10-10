@@ -505,7 +505,8 @@ char *yytext;
     ・ヘッダのインクルードやグローバル変数の宣言等をここに書く
 *********************************************************************/
 
-#include "lex.h"
+#include "ast.h"
+#include "parse.hpp"
 
 int linenum;
 
@@ -514,12 +515,12 @@ int linenum;
     ・正規表現の定義
     ・C パートに書くには少し複雑なパターンをここに定義する
 *********************************************************************/
-#line 30 "lex.ll"
+#line 31 "lex.ll"
 /*********************************************************************
    C パート (%% の行から次の %% の行まで)
    ・字句のパターンと, それを見つけたときのアクションを書く
 *********************************************************************/
-#line 523 "lex.yy.c"
+#line 524 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -737,9 +738,9 @@ YY_DECL
 		}
 
 	{
-#line 35 "lex.ll"
+#line 36 "lex.ll"
 
-#line 743 "lex.yy.c"
+#line 744 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -798,196 +799,196 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 36 "lex.ll"
+#line 37 "lex.ll"
 {}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 37 "lex.ll"
+#line 38 "lex.ll"
 { linenum++; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 39 "lex.ll"
+#line 40 "lex.ll"
 { return lex_KW_CHAR; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 40 "lex.ll"
+#line 41 "lex.ll"
 { return lex_KW_ELSE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 41 "lex.ll"
+#line 42 "lex.ll"
 { return lex_KW_IF; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 42 "lex.ll"
+#line 43 "lex.ll"
 { return lex_KW_INT; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 43 "lex.ll"
+#line 44 "lex.ll"
 { return lex_KW_RETURN; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 44 "lex.ll"
+#line 45 "lex.ll"
 { return lex_KW_WHILE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 46 "lex.ll"
+#line 47 "lex.ll"
 { return lex_PLUS; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 47 "lex.ll"
+#line 48 "lex.ll"
 { return lex_MINUS; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 48 "lex.ll"
+#line 49 "lex.ll"
 { return lex_STAR; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 49 "lex.ll"
+#line 50 "lex.ll"
 { return lex_SLASH; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 50 "lex.ll"
+#line 51 "lex.ll"
 { return lex_PERCENT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 51 "lex.ll"
+#line 52 "lex.ll"
 { return lex_AND; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 52 "lex.ll"
+#line 53 "lex.ll"
 { return lex_EQ; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 53 "lex.ll"
+#line 54 "lex.ll"
 { return lex_EQEQ; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 54 "lex.ll"
+#line 55 "lex.ll"
 { return lex_NE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 55 "lex.ll"
+#line 56 "lex.ll"
 { return lex_GT; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 56 "lex.ll"
+#line 57 "lex.ll"
 { return lex_GE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 57 "lex.ll"
+#line 58 "lex.ll"
 { return lex_LT; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 58 "lex.ll"
+#line 59 "lex.ll"
 { return lex_LE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 59 "lex.ll"
+#line 60 "lex.ll"
 { return lex_COMMA; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 60 "lex.ll"
+#line 61 "lex.ll"
 { return lex_SEMICOLON; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "lex.ll"
+#line 62 "lex.ll"
 { return lex_LPAREN; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 62 "lex.ll"
+#line 63 "lex.ll"
 { return lex_RPAREN; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 63 "lex.ll"
+#line 64 "lex.ll"
 { return lex_LBRACE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 64 "lex.ll"
+#line 65 "lex.ll"
 { return lex_RBRACE; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 65 "lex.ll"
+#line 66 "lex.ll"
 { return lex_LBRACK; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 66 "lex.ll"
+#line 67 "lex.ll"
 { return lex_RBRACK; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 68 "lex.ll"
+#line 69 "lex.ll"
 { sscanf(yytext, "%d", &yylval.val); return lex_INT; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 69 "lex.ll"
+#line 70 "lex.ll"
 { yylval.string = strdup(yytext); return lex_ID; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 70 "lex.ll"
+#line 71 "lex.ll"
 { yylval.val = yytext[1]; return lex_CHAR; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 71 "lex.ll"
+#line 72 "lex.ll"
 { yylval.val = 9; return lex_CHAR; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 72 "lex.ll"
+#line 73 "lex.ll"
 { yylval.val = 10; return lex_CHAR; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 73 "lex.ll"
+#line 74 "lex.ll"
 { yylval.val = 39; return lex_CHAR; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 74 "lex.ll"
+#line 75 "lex.ll"
 { yylval.val = 92; return lex_CHAR; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 75 "lex.ll"
+#line 77 "lex.ll"
 { fprintf(stderr, "%d: 不正な文字 '%c'\n", linenum, yytext[0]); exit(4); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 77 "lex.ll"
+#line 79 "lex.ll"
 ECHO;
 	YY_BREAK
-#line 991 "lex.yy.c"
+#line 992 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1988,7 +1989,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 77 "lex.ll"
+#line 79 "lex.ll"
 
 
 
