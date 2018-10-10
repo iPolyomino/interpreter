@@ -268,9 +268,14 @@ stlist
   $$ = $1;
 }
 
-
-st_if: {
-
+st_if
+: lex_KW_IF lex_LPAREN expression lex_RPAREN statement
+{
+  $$ = new St_if($3, $5, NULL);
+}
+| lex_KW_IF lex_LPAREN expression lex_RPAREN statement lex_KW_ELSE statement
+{
+  $$ = new St_if($3, $5, $7);
 }
 
 st_while: {
