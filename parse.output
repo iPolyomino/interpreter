@@ -13,14 +13,15 @@ Terminals unused in grammar
 
 Rules useless in parser due to conflicts
 
-   37 st_while: %empty
+   39 st_while: %empty
 
-   38 st_return: %empty
+   40 st_return: %empty
 
-   39 st_function: %empty
+   41 st_function: %empty
 
 
 State 0 conflicts: 1 reduce/reduce
+State 12 conflicts: 2 shift/reduce, 3 reduce/reduce
 
 
 Grammar
@@ -71,15 +72,18 @@ Grammar
 
    34 st_assign: exp_variable lex_EQ expression lex_SEMICOLON
 
-   35 st_list: %empty
+   35 st_list: stlist
 
-   36 st_if: %empty
+   36 stlist: %empty
+   37       | stlist statement
 
-   37 st_while: %empty
+   38 st_if: %empty
 
-   38 st_return: %empty
+   39 st_while: %empty
 
-   39 st_function: %empty
+   40 st_return: %empty
+
+   41 st_function: %empty
 
 
 Terminals, with rules where they appear
@@ -139,19 +143,21 @@ exp_function (40)
 explist (41)
     on left: 25 26 27, on right: 24 27
 statement (42)
-    on left: 28 29 30 31 32 33, on right: 1
+    on left: 28 29 30 31 32 33, on right: 1 37
 st_assign (43)
     on left: 34, on right: 28
 st_list (44)
     on left: 35, on right: 29
-st_if (45)
-    on left: 36, on right: 30
-st_while (46)
-    on left: 37, on right: 31
-st_return (47)
-    on left: 38, on right: 32
-st_function (48)
-    on left: 39, on right: 33
+stlist (45)
+    on left: 36 37, on right: 35 37
+st_if (46)
+    on left: 38, on right: 30
+st_while (47)
+    on left: 39, on right: 31
+st_return (48)
+    on left: 40, on right: 32
+st_function (49)
+    on left: 41, on right: 33
 
 
 State 0
@@ -161,11 +167,11 @@ State 0
     lex_LBRACE  shift, and go to state 1
     lex_ID      shift, and go to state 2
 
-    $end      reduce using rule 36 (st_if)
-    $end      [reduce using rule 37 (st_while)]
-    $end      [reduce using rule 38 (st_return)]
-    $end      [reduce using rule 39 (st_function)]
-    $default  reduce using rule 36 (st_if)
+    $end      reduce using rule 38 (st_if)
+    $end      [reduce using rule 39 (st_while)]
+    $end      [reduce using rule 40 (st_return)]
+    $end      [reduce using rule 41 (st_function)]
+    $default  reduce using rule 38 (st_if)
 
     program       go to state 3
     exp_variable  go to state 4
@@ -181,9 +187,10 @@ State 1
 
    29 statement: lex_LBRACE . st_list lex_RBRACE
 
-    $default  reduce using rule 35 (st_list)
+    $default  reduce using rule 36 (stlist)
 
     st_list  go to state 11
+    stlist   go to state 12
 
 
 State 2
@@ -197,14 +204,14 @@ State 3
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 12
+    $end  shift, and go to state 13
 
 
 State 4
 
    34 st_assign: exp_variable . lex_EQ expression lex_SEMICOLON
 
-    lex_EQ  shift, and go to state 13
+    lex_EQ  shift, and go to state 14
 
 
 State 5
@@ -253,116 +260,155 @@ State 11
 
    29 statement: lex_LBRACE st_list . lex_RBRACE
 
-    lex_RBRACE  shift, and go to state 14
+    lex_RBRACE  shift, and go to state 15
 
 
 State 12
+
+   35 st_list: stlist .
+   37 stlist: stlist . statement
+
+    lex_LBRACE  shift, and go to state 1
+    lex_ID      shift, and go to state 2
+
+    lex_LBRACE  [reduce using rule 38 (st_if)]
+    lex_LBRACE  [reduce using rule 39 (st_while)]
+    lex_LBRACE  [reduce using rule 40 (st_return)]
+    lex_LBRACE  [reduce using rule 41 (st_function)]
+    lex_RBRACE  reduce using rule 35 (st_list)
+    lex_RBRACE  [reduce using rule 38 (st_if)]
+    lex_RBRACE  [reduce using rule 39 (st_while)]
+    lex_RBRACE  [reduce using rule 40 (st_return)]
+    lex_RBRACE  [reduce using rule 41 (st_function)]
+    lex_ID      [reduce using rule 38 (st_if)]
+    lex_ID      [reduce using rule 39 (st_while)]
+    lex_ID      [reduce using rule 40 (st_return)]
+    lex_ID      [reduce using rule 41 (st_function)]
+    $default    reduce using rule 35 (st_list)
+
+    exp_variable  go to state 4
+    statement     go to state 16
+    st_assign     go to state 6
+    st_if         go to state 7
+    st_while      go to state 8
+    st_return     go to state 9
+    st_function   go to state 10
+
+
+State 13
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 13
+State 14
 
    34 st_assign: exp_variable lex_EQ . expression lex_SEMICOLON
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
-    expression    go to state 21
-    expression2   go to state 22
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression    go to state 23
+    expression2   go to state 24
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
-State 14
+State 15
 
    29 statement: lex_LBRACE st_list lex_RBRACE .
 
     $default  reduce using rule 29 (statement)
 
 
-State 15
-
-   10 expression2: lex_PLUS . expression3
-
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
-
-    expression3   go to state 27
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
-
-
 State 16
 
-   11 expression2: lex_MINUS . expression3
+   37 stlist: stlist statement .
 
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
-
-    expression3   go to state 28
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    $default  reduce using rule 37 (stlist)
 
 
 State 17
 
-   21 expression4: lex_LPAREN . expression lex_RPAREN
+   10 expression2: lex_PLUS . expression3
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
-    expression    go to state 29
-    expression2   go to state 22
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 29
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 18
+
+   11 expression2: lex_MINUS . expression3
+
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
+
+    expression3   go to state 30
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
+
+
+State 19
+
+   21 expression4: lex_LPAREN . expression lex_RPAREN
+
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
+
+    expression    go to state 31
+    expression2   go to state 24
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
+
+
+State 20
 
    18 expression4: lex_INT .
 
     $default  reduce using rule 18 (expression4)
 
 
-State 19
+State 21
 
    19 expression4: lex_CHAR .
 
     $default  reduce using rule 19 (expression4)
 
 
-State 20
+State 22
 
    23 exp_variable: lex_ID .
    24 exp_function: lex_ID . lex_LPAREN explist lex_RPAREN
 
-    lex_LPAREN  shift, and go to state 30
+    lex_LPAREN  shift, and go to state 32
 
     $default  reduce using rule 23 (exp_variable)
 
 
-State 21
+State 23
 
     3 expression: expression . lex_LT expression2
     4           | expression . lex_GT expression2
@@ -372,91 +418,91 @@ State 21
     8           | expression . lex_NE expression2
    34 st_assign: exp_variable lex_EQ expression . lex_SEMICOLON
 
-    lex_EQEQ       shift, and go to state 31
-    lex_NE         shift, and go to state 32
-    lex_LT         shift, and go to state 33
-    lex_GT         shift, and go to state 34
-    lex_LE         shift, and go to state 35
-    lex_GE         shift, and go to state 36
-    lex_SEMICOLON  shift, and go to state 37
+    lex_EQEQ       shift, and go to state 33
+    lex_NE         shift, and go to state 34
+    lex_LT         shift, and go to state 35
+    lex_GT         shift, and go to state 36
+    lex_LE         shift, and go to state 37
+    lex_GE         shift, and go to state 38
+    lex_SEMICOLON  shift, and go to state 39
 
 
-State 22
+State 24
 
     2 expression: expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 2 (expression)
 
 
-State 23
+State 25
 
     9 expression2: expression3 .
    15 expression3: expression3 . lex_STAR expression4
    16            | expression3 . lex_SLASH expression4
    17            | expression3 . lex_PERCENT expression4
 
-    lex_STAR     shift, and go to state 40
-    lex_SLASH    shift, and go to state 41
-    lex_PERCENT  shift, and go to state 42
+    lex_STAR     shift, and go to state 42
+    lex_SLASH    shift, and go to state 43
+    lex_PERCENT  shift, and go to state 44
 
     $default  reduce using rule 9 (expression2)
 
 
-State 24
+State 26
 
    14 expression3: expression4 .
 
     $default  reduce using rule 14 (expression3)
 
 
-State 25
+State 27
 
    20 expression4: exp_variable .
 
     $default  reduce using rule 20 (expression4)
 
 
-State 26
+State 28
 
    22 expression4: exp_function .
 
     $default  reduce using rule 22 (expression4)
 
 
-State 27
+State 29
 
    10 expression2: lex_PLUS expression3 .
    15 expression3: expression3 . lex_STAR expression4
    16            | expression3 . lex_SLASH expression4
    17            | expression3 . lex_PERCENT expression4
 
-    lex_STAR     shift, and go to state 40
-    lex_SLASH    shift, and go to state 41
-    lex_PERCENT  shift, and go to state 42
+    lex_STAR     shift, and go to state 42
+    lex_SLASH    shift, and go to state 43
+    lex_PERCENT  shift, and go to state 44
 
     $default  reduce using rule 10 (expression2)
 
 
-State 28
+State 30
 
    11 expression2: lex_MINUS expression3 .
    15 expression3: expression3 . lex_STAR expression4
    16            | expression3 . lex_SLASH expression4
    17            | expression3 . lex_PERCENT expression4
 
-    lex_STAR     shift, and go to state 40
-    lex_SLASH    shift, and go to state 41
-    lex_PERCENT  shift, and go to state 42
+    lex_STAR     shift, and go to state 42
+    lex_SLASH    shift, and go to state 43
+    lex_PERCENT  shift, and go to state 44
 
     $default  reduce using rule 11 (expression2)
 
 
-State 29
+State 31
 
     3 expression: expression . lex_LT expression2
     4           | expression . lex_GT expression2
@@ -466,232 +512,232 @@ State 29
     8           | expression . lex_NE expression2
    21 expression4: lex_LPAREN expression . lex_RPAREN
 
-    lex_EQEQ    shift, and go to state 31
-    lex_NE      shift, and go to state 32
-    lex_LT      shift, and go to state 33
-    lex_GT      shift, and go to state 34
-    lex_LE      shift, and go to state 35
-    lex_GE      shift, and go to state 36
-    lex_RPAREN  shift, and go to state 43
-
-
-State 30
-
-   24 exp_function: lex_ID lex_LPAREN . explist lex_RPAREN
-
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
-
-    $default  reduce using rule 25 (explist)
-
-    expression    go to state 44
-    expression2   go to state 22
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
-    explist       go to state 45
-
-
-State 31
-
-    7 expression: expression lex_EQEQ . expression2
-
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
-
-    expression2   go to state 46
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    lex_EQEQ    shift, and go to state 33
+    lex_NE      shift, and go to state 34
+    lex_LT      shift, and go to state 35
+    lex_GT      shift, and go to state 36
+    lex_LE      shift, and go to state 37
+    lex_GE      shift, and go to state 38
+    lex_RPAREN  shift, and go to state 45
 
 
 State 32
 
-    8 expression: expression lex_NE . expression2
+   24 exp_function: lex_ID lex_LPAREN . explist lex_RPAREN
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
-    expression2   go to state 47
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    $default  reduce using rule 25 (explist)
+
+    expression    go to state 46
+    expression2   go to state 24
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
+    explist       go to state 47
 
 
 State 33
 
-    3 expression: expression lex_LT . expression2
+    7 expression: expression lex_EQEQ . expression2
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
     expression2   go to state 48
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 34
 
-    4 expression: expression lex_GT . expression2
+    8 expression: expression lex_NE . expression2
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
     expression2   go to state 49
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 35
 
-    5 expression: expression lex_LE . expression2
+    3 expression: expression lex_LT . expression2
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
     expression2   go to state 50
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 36
 
-    6 expression: expression lex_GE . expression2
+    4 expression: expression lex_GT . expression2
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
     expression2   go to state 51
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 37
+
+    5 expression: expression lex_LE . expression2
+
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
+
+    expression2   go to state 52
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
+
+
+State 38
+
+    6 expression: expression lex_GE . expression2
+
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
+
+    expression2   go to state 53
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
+
+
+State 39
 
    34 st_assign: exp_variable lex_EQ expression lex_SEMICOLON .
 
     $default  reduce using rule 34 (st_assign)
 
 
-State 38
+State 40
 
    12 expression2: expression2 lex_PLUS . expression3
 
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
-    expression3   go to state 52
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
-
-
-State 39
-
-   13 expression2: expression2 lex_MINUS . expression3
-
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
-
-    expression3   go to state 53
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
-
-
-State 40
-
-   15 expression3: expression3 lex_STAR . expression4
-
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
-
-    expression4   go to state 54
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 54
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 41
 
-   16 expression3: expression3 lex_SLASH . expression4
+   13 expression2: expression2 lex_MINUS . expression3
 
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
-    expression4   go to state 55
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression3   go to state 55
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 42
 
-   17 expression3: expression3 lex_PERCENT . expression4
+   15 expression3: expression3 lex_STAR . expression4
 
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
     expression4   go to state 56
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
 State 43
+
+   16 expression3: expression3 lex_SLASH . expression4
+
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
+
+    expression4   go to state 57
+    exp_variable  go to state 27
+    exp_function  go to state 28
+
+
+State 44
+
+   17 expression3: expression3 lex_PERCENT . expression4
+
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
+
+    expression4   go to state 58
+    exp_variable  go to state 27
+    exp_function  go to state 28
+
+
+State 45
 
    21 expression4: lex_LPAREN expression lex_RPAREN .
 
     $default  reduce using rule 21 (expression4)
 
 
-State 44
+State 46
 
     3 expression: expression . lex_LT expression2
     4           | expression . lex_GT expression2
@@ -701,173 +747,173 @@ State 44
     8           | expression . lex_NE expression2
    26 explist: expression .
 
-    lex_EQEQ  shift, and go to state 31
-    lex_NE    shift, and go to state 32
-    lex_LT    shift, and go to state 33
-    lex_GT    shift, and go to state 34
-    lex_LE    shift, and go to state 35
-    lex_GE    shift, and go to state 36
+    lex_EQEQ  shift, and go to state 33
+    lex_NE    shift, and go to state 34
+    lex_LT    shift, and go to state 35
+    lex_GT    shift, and go to state 36
+    lex_LE    shift, and go to state 37
+    lex_GE    shift, and go to state 38
 
     $default  reduce using rule 26 (explist)
 
 
-State 45
+State 47
 
    24 exp_function: lex_ID lex_LPAREN explist . lex_RPAREN
    27 explist: explist . lex_COMMA expression
 
-    lex_COMMA   shift, and go to state 57
-    lex_RPAREN  shift, and go to state 58
+    lex_COMMA   shift, and go to state 59
+    lex_RPAREN  shift, and go to state 60
 
 
-State 46
+State 48
 
     7 expression: expression lex_EQEQ expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 7 (expression)
 
 
-State 47
+State 49
 
     8 expression: expression lex_NE expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 8 (expression)
 
 
-State 48
+State 50
 
     3 expression: expression lex_LT expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 3 (expression)
 
 
-State 49
+State 51
 
     4 expression: expression lex_GT expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 4 (expression)
 
 
-State 50
+State 52
 
     5 expression: expression lex_LE expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 5 (expression)
 
 
-State 51
+State 53
 
     6 expression: expression lex_GE expression2 .
    12 expression2: expression2 . lex_PLUS expression3
    13            | expression2 . lex_MINUS expression3
 
-    lex_PLUS   shift, and go to state 38
-    lex_MINUS  shift, and go to state 39
+    lex_PLUS   shift, and go to state 40
+    lex_MINUS  shift, and go to state 41
 
     $default  reduce using rule 6 (expression)
 
 
-State 52
+State 54
 
    12 expression2: expression2 lex_PLUS expression3 .
    15 expression3: expression3 . lex_STAR expression4
    16            | expression3 . lex_SLASH expression4
    17            | expression3 . lex_PERCENT expression4
 
-    lex_STAR     shift, and go to state 40
-    lex_SLASH    shift, and go to state 41
-    lex_PERCENT  shift, and go to state 42
+    lex_STAR     shift, and go to state 42
+    lex_SLASH    shift, and go to state 43
+    lex_PERCENT  shift, and go to state 44
 
     $default  reduce using rule 12 (expression2)
 
 
-State 53
+State 55
 
    13 expression2: expression2 lex_MINUS expression3 .
    15 expression3: expression3 . lex_STAR expression4
    16            | expression3 . lex_SLASH expression4
    17            | expression3 . lex_PERCENT expression4
 
-    lex_STAR     shift, and go to state 40
-    lex_SLASH    shift, and go to state 41
-    lex_PERCENT  shift, and go to state 42
+    lex_STAR     shift, and go to state 42
+    lex_SLASH    shift, and go to state 43
+    lex_PERCENT  shift, and go to state 44
 
     $default  reduce using rule 13 (expression2)
 
 
-State 54
+State 56
 
    15 expression3: expression3 lex_STAR expression4 .
 
     $default  reduce using rule 15 (expression3)
 
 
-State 55
+State 57
 
    16 expression3: expression3 lex_SLASH expression4 .
 
     $default  reduce using rule 16 (expression3)
 
 
-State 56
+State 58
 
    17 expression3: expression3 lex_PERCENT expression4 .
 
     $default  reduce using rule 17 (expression3)
 
 
-State 57
+State 59
 
    27 explist: explist lex_COMMA . expression
 
-    lex_PLUS    shift, and go to state 15
-    lex_MINUS   shift, and go to state 16
-    lex_LPAREN  shift, and go to state 17
-    lex_INT     shift, and go to state 18
-    lex_CHAR    shift, and go to state 19
-    lex_ID      shift, and go to state 20
+    lex_PLUS    shift, and go to state 17
+    lex_MINUS   shift, and go to state 18
+    lex_LPAREN  shift, and go to state 19
+    lex_INT     shift, and go to state 20
+    lex_CHAR    shift, and go to state 21
+    lex_ID      shift, and go to state 22
 
-    expression    go to state 59
-    expression2   go to state 22
-    expression3   go to state 23
-    expression4   go to state 24
-    exp_variable  go to state 25
-    exp_function  go to state 26
+    expression    go to state 61
+    expression2   go to state 24
+    expression3   go to state 25
+    expression4   go to state 26
+    exp_variable  go to state 27
+    exp_function  go to state 28
 
 
-State 58
+State 60
 
    24 exp_function: lex_ID lex_LPAREN explist lex_RPAREN .
 
     $default  reduce using rule 24 (exp_function)
 
 
-State 59
+State 61
 
     3 expression: expression . lex_LT expression2
     4           | expression . lex_GT expression2
@@ -877,11 +923,11 @@ State 59
     8           | expression . lex_NE expression2
    27 explist: explist lex_COMMA expression .
 
-    lex_EQEQ  shift, and go to state 31
-    lex_NE    shift, and go to state 32
-    lex_LT    shift, and go to state 33
-    lex_GT    shift, and go to state 34
-    lex_LE    shift, and go to state 35
-    lex_GE    shift, and go to state 36
+    lex_EQEQ  shift, and go to state 33
+    lex_NE    shift, and go to state 34
+    lex_LT    shift, and go to state 35
+    lex_GT    shift, and go to state 36
+    lex_LE    shift, and go to state 37
+    lex_GE    shift, and go to state 38
 
     $default  reduce using rule 27 (explist)

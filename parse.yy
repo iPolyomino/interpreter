@@ -33,6 +33,7 @@ void yyerror(const char*);
   Exp_variable* exp_variable;
   std::list<Expression*>* explist;
   Statement* statement;
+  std::list<Statement*>* stlist;
 }  
  
 // --------------------------------------------------------------------  
@@ -76,6 +77,7 @@ void yyerror(const char*);
 %type <statement> st_return
 %type <statement> st_function
 %type <statement> st_list
+%type <stlist> stlist
 
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
@@ -248,9 +250,24 @@ st_assign
   $$ = new St_assign($1, $3);
 }
 
-st_list: {
-
+st_list
+: stlist
+{
+  $$ = new St_list(*$1);
+  delete $1;
 }
+
+stlist
+: 
+{
+  $$ = new std::list<Statement*>;
+}
+| stlist statement
+{
+  $1->push_back($2);
+  $$ = $1;
+}
+
 
 st_if: {
 
