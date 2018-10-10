@@ -88,8 +88,9 @@ union YYSTYPE
   char* string;  
   int val;
   Expression* expression;
+  Exp_variable* exp_variable;
 
-#line 93 "parse.hpp" /* yacc.c:1909  */
+#line 94 "parse.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

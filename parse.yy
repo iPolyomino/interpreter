@@ -30,6 +30,7 @@ void yyerror(const char*);
   char* string;  
   int val;
   Expression* expression;
+  Exp_variable* exp_variable;
 }  
  
 // --------------------------------------------------------------------  
@@ -59,6 +60,7 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
 
 %type <expression> expression4
+%type <exp_variable> exp_variable
 
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
@@ -86,6 +88,16 @@ expression4
 | lex_CHAR
 {
   $$ = new Exp_constant(Type_CHAR, $1);
+}
+| exp_variable
+{
+  $$ = $1;
+}
+
+exp_variable
+: lex_ID
+{
+  $$ = new Exp_variable($1);
 }
 
 %%  

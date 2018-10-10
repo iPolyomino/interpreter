@@ -27,7 +27,6 @@ Terminals unused in grammar
    lex_RBRACE
    lex_LBRACK
    lex_RBRACK
-   lex_ID
 
 
 Grammar
@@ -38,6 +37,9 @@ Grammar
 
     2 expression4: lex_INT
     3            | lex_CHAR
+    4            | exp_variable
+
+    5 exp_variable: lex_ID
 
 
 Terminals, with rules where they appear
@@ -73,7 +75,7 @@ lex_LBRACK (283)
 lex_RBRACK (284)
 lex_INT (285) 2
 lex_CHAR (286) 3
-lex_ID (287)
+lex_ID (287) 5
 
 
 Nonterminals, with rules where they appear
@@ -83,7 +85,9 @@ $accept (33)
 program (34)
     on left: 1, on right: 0
 expression4 (35)
-    on left: 2 3, on right: 1
+    on left: 2 3 4, on right: 1
+exp_variable (36)
+    on left: 5, on right: 4
 
 
 State 0
@@ -92,9 +96,11 @@ State 0
 
     lex_INT   shift, and go to state 1
     lex_CHAR  shift, and go to state 2
+    lex_ID    shift, and go to state 3
 
-    program      go to state 3
-    expression4  go to state 4
+    program       go to state 4
+    expression4   go to state 5
+    exp_variable  go to state 6
 
 
 State 1
@@ -113,19 +119,33 @@ State 2
 
 State 3
 
-    0 $accept: program . $end
+    5 exp_variable: lex_ID .
 
-    $end  shift, and go to state 5
+    $default  reduce using rule 5 (exp_variable)
 
 
 State 4
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 7
+
+
+State 5
 
     1 program: expression4 .
 
     $default  reduce using rule 1 (program)
 
 
-State 5
+State 6
+
+    4 expression4: exp_variable .
+
+    $default  reduce using rule 4 (expression4)
+
+
+State 7
 
     0 $accept: program $end .
 
