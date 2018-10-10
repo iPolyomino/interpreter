@@ -90,6 +90,14 @@ expression3
 {
   $$ = new Exp_operation2(Operator_MUL, $1, $3);
 }
+| expression3 lex_SLASH expression4
+{
+  $$ = new Exp_operation2(Operator_DIV, $1, $3);
+}
+| expression3 lex_PERCENT expression4
+{
+  $$ = new Exp_operation2(Operator_MOD, $1, $3);
+}
 
 expression4
 : lex_INT
