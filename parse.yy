@@ -290,8 +290,11 @@ st_return
   $$ = new St_return($2);
 }
 
-st_function: {
-
+st_function
+: lex_ID lex_LPAREN explist lex_RPAREN lex_SEMICOLON
+{
+  $$ = new St_function($1, *$3);
+  delete $3;
 }
 
 %%  
