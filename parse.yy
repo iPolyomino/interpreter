@@ -32,6 +32,7 @@ void yyerror(const char*);
   Expression* expression;
   Exp_variable* exp_variable;
   std::list<Expression*>* explist;
+  Statement* statement;
 }  
  
 // --------------------------------------------------------------------  
@@ -68,6 +69,14 @@ void yyerror(const char*);
 %type <expression> exp_function
 %type <explist> explist
 
+%type <statement> statement
+%type <statement> st_assign
+%type <statement> st_if
+%type <statement> st_while
+%type <statement> st_return
+%type <statement> st_function
+%type <statement> st_list
+
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
 // --------------------------------------------------------------------  
@@ -80,7 +89,7 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
   
 program
-: expression
+: statement
 {
   $1->print(std::cout);
   std::cout << std::endl;
@@ -205,6 +214,56 @@ explist
 {
   $1->push_back($3);
   $$ = $1;
+}
+
+statement
+: st_assign
+{
+  $$ = $1;
+}
+| lex_LBRACE st_list lex_RBRACE
+{
+  $$ = $2;
+}
+| st_if
+{
+  $$ = $1;
+}
+| st_while
+{
+  $$ = $1;
+}
+| st_return
+{
+  $$ = $1;
+}
+| st_function
+{
+  $$ = $1;
+}
+
+st_assign: {
+
+}
+
+st_list: {
+
+}
+
+st_if: {
+
+}
+
+st_while: {
+
+}
+
+st_return: {
+
+}
+
+st_function: {
+
 }
 
 %%  
