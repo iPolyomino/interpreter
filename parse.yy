@@ -95,6 +95,14 @@ expression2
 {
   $$ = new Exp_operation1(Operator_MINUS, $2);
 }
+| expression2 lex_PLUS expression3
+{
+  $$ = new Exp_operation2(Operator_PLUS, $1, $3);
+}
+| expression2 lex_MINUS expression3
+{
+  $$ = new Exp_operation2(Operator_MINUS, $1, $3);
+}
 
 expression3
 : expression4
