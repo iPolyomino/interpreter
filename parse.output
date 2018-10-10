@@ -6,7 +6,6 @@ Terminals unused in grammar
    lex_KW_ELSE
    lex_KW_WHILE
    lex_KW_RETURN
-   lex_PLUS
    lex_MINUS
    lex_AND
    lex_EQ
@@ -30,18 +29,21 @@ Grammar
 
     0 $accept: program $end
 
-    1 program: expression3
+    1 program: expression2
 
-    2 expression3: expression4
-    3            | expression3 lex_STAR expression4
-    4            | expression3 lex_SLASH expression4
-    5            | expression3 lex_PERCENT expression4
+    2 expression2: expression3
+    3            | lex_PLUS expression3
 
-    6 expression4: lex_INT
-    7            | lex_CHAR
-    8            | exp_variable
+    4 expression3: expression4
+    5            | expression3 lex_STAR expression4
+    6            | expression3 lex_SLASH expression4
+    7            | expression3 lex_PERCENT expression4
 
-    9 exp_variable: lex_ID
+    8 expression4: lex_INT
+    9            | lex_CHAR
+   10            | exp_variable
+
+   11 exp_variable: lex_ID
 
 
 Terminals, with rules where they appear
@@ -54,11 +56,11 @@ lex_KW_IF (260)
 lex_KW_ELSE (261)
 lex_KW_WHILE (262)
 lex_KW_RETURN (263)
-lex_PLUS (264)
+lex_PLUS (264) 3
 lex_MINUS (265)
-lex_STAR (266) 3
-lex_SLASH (267) 4
-lex_PERCENT (268) 5
+lex_STAR (266) 5
+lex_SLASH (267) 6
+lex_PERCENT (268) 7
 lex_AND (269)
 lex_EQ (270)
 lex_EQEQ (271)
@@ -75,9 +77,9 @@ lex_LBRACE (281)
 lex_RBRACE (282)
 lex_LBRACK (283)
 lex_RBRACK (284)
-lex_INT (285) 6
-lex_CHAR (286) 7
-lex_ID (287) 9
+lex_INT (285) 8
+lex_CHAR (286) 9
+lex_ID (287) 11
 
 
 Nonterminals, with rules where they appear
@@ -86,143 +88,181 @@ $accept (33)
     on left: 0
 program (34)
     on left: 1, on right: 0
-expression3 (35)
-    on left: 2 3 4 5, on right: 1 3 4 5
-expression4 (36)
-    on left: 6 7 8, on right: 2 3 4 5
-exp_variable (37)
-    on left: 9, on right: 8
+expression2 (35)
+    on left: 2 3, on right: 1
+expression3 (36)
+    on left: 4 5 6 7, on right: 2 3 5 6 7
+expression4 (37)
+    on left: 8 9 10, on right: 4 5 6 7
+exp_variable (38)
+    on left: 11, on right: 10
 
 
 State 0
 
     0 $accept: . program $end
 
-    lex_INT   shift, and go to state 1
-    lex_CHAR  shift, and go to state 2
-    lex_ID    shift, and go to state 3
+    lex_PLUS  shift, and go to state 1
+    lex_INT   shift, and go to state 2
+    lex_CHAR  shift, and go to state 3
+    lex_ID    shift, and go to state 4
 
-    program       go to state 4
-    expression3   go to state 5
-    expression4   go to state 6
-    exp_variable  go to state 7
+    program       go to state 5
+    expression2   go to state 6
+    expression3   go to state 7
+    expression4   go to state 8
+    exp_variable  go to state 9
 
 
 State 1
 
-    6 expression4: lex_INT .
+    3 expression2: lex_PLUS . expression3
 
-    $default  reduce using rule 6 (expression4)
+    lex_INT   shift, and go to state 2
+    lex_CHAR  shift, and go to state 3
+    lex_ID    shift, and go to state 4
+
+    expression3   go to state 10
+    expression4   go to state 8
+    exp_variable  go to state 9
 
 
 State 2
 
-    7 expression4: lex_CHAR .
-
-    $default  reduce using rule 7 (expression4)
-
-
-State 3
-
-    9 exp_variable: lex_ID .
-
-    $default  reduce using rule 9 (exp_variable)
-
-
-State 4
-
-    0 $accept: program . $end
-
-    $end  shift, and go to state 8
-
-
-State 5
-
-    1 program: expression3 .
-    3 expression3: expression3 . lex_STAR expression4
-    4            | expression3 . lex_SLASH expression4
-    5            | expression3 . lex_PERCENT expression4
-
-    lex_STAR     shift, and go to state 9
-    lex_SLASH    shift, and go to state 10
-    lex_PERCENT  shift, and go to state 11
-
-    $default  reduce using rule 1 (program)
-
-
-State 6
-
-    2 expression3: expression4 .
-
-    $default  reduce using rule 2 (expression3)
-
-
-State 7
-
-    8 expression4: exp_variable .
+    8 expression4: lex_INT .
 
     $default  reduce using rule 8 (expression4)
 
 
+State 3
+
+    9 expression4: lex_CHAR .
+
+    $default  reduce using rule 9 (expression4)
+
+
+State 4
+
+   11 exp_variable: lex_ID .
+
+    $default  reduce using rule 11 (exp_variable)
+
+
+State 5
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 11
+
+
+State 6
+
+    1 program: expression2 .
+
+    $default  reduce using rule 1 (program)
+
+
+State 7
+
+    2 expression2: expression3 .
+    5 expression3: expression3 . lex_STAR expression4
+    6            | expression3 . lex_SLASH expression4
+    7            | expression3 . lex_PERCENT expression4
+
+    lex_STAR     shift, and go to state 12
+    lex_SLASH    shift, and go to state 13
+    lex_PERCENT  shift, and go to state 14
+
+    $default  reduce using rule 2 (expression2)
+
+
 State 8
+
+    4 expression3: expression4 .
+
+    $default  reduce using rule 4 (expression3)
+
+
+State 9
+
+   10 expression4: exp_variable .
+
+    $default  reduce using rule 10 (expression4)
+
+
+State 10
+
+    3 expression2: lex_PLUS expression3 .
+    5 expression3: expression3 . lex_STAR expression4
+    6            | expression3 . lex_SLASH expression4
+    7            | expression3 . lex_PERCENT expression4
+
+    lex_STAR     shift, and go to state 12
+    lex_SLASH    shift, and go to state 13
+    lex_PERCENT  shift, and go to state 14
+
+    $default  reduce using rule 3 (expression2)
+
+
+State 11
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 9
-
-    3 expression3: expression3 lex_STAR . expression4
-
-    lex_INT   shift, and go to state 1
-    lex_CHAR  shift, and go to state 2
-    lex_ID    shift, and go to state 3
-
-    expression4   go to state 12
-    exp_variable  go to state 7
-
-
-State 10
-
-    4 expression3: expression3 lex_SLASH . expression4
-
-    lex_INT   shift, and go to state 1
-    lex_CHAR  shift, and go to state 2
-    lex_ID    shift, and go to state 3
-
-    expression4   go to state 13
-    exp_variable  go to state 7
-
-
-State 11
-
-    5 expression3: expression3 lex_PERCENT . expression4
-
-    lex_INT   shift, and go to state 1
-    lex_CHAR  shift, and go to state 2
-    lex_ID    shift, and go to state 3
-
-    expression4   go to state 14
-    exp_variable  go to state 7
-
-
 State 12
 
-    3 expression3: expression3 lex_STAR expression4 .
+    5 expression3: expression3 lex_STAR . expression4
 
-    $default  reduce using rule 3 (expression3)
+    lex_INT   shift, and go to state 2
+    lex_CHAR  shift, and go to state 3
+    lex_ID    shift, and go to state 4
+
+    expression4   go to state 15
+    exp_variable  go to state 9
 
 
 State 13
 
-    4 expression3: expression3 lex_SLASH expression4 .
+    6 expression3: expression3 lex_SLASH . expression4
 
-    $default  reduce using rule 4 (expression3)
+    lex_INT   shift, and go to state 2
+    lex_CHAR  shift, and go to state 3
+    lex_ID    shift, and go to state 4
+
+    expression4   go to state 16
+    exp_variable  go to state 9
 
 
 State 14
 
-    5 expression3: expression3 lex_PERCENT expression4 .
+    7 expression3: expression3 lex_PERCENT . expression4
+
+    lex_INT   shift, and go to state 2
+    lex_CHAR  shift, and go to state 3
+    lex_ID    shift, and go to state 4
+
+    expression4   go to state 17
+    exp_variable  go to state 9
+
+
+State 15
+
+    5 expression3: expression3 lex_STAR expression4 .
 
     $default  reduce using rule 5 (expression3)
+
+
+State 16
+
+    6 expression3: expression3 lex_SLASH expression4 .
+
+    $default  reduce using rule 6 (expression3)
+
+
+State 17
+
+    7 expression3: expression3 lex_PERCENT expression4 .
+
+    $default  reduce using rule 7 (expression3)
