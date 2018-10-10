@@ -34,6 +34,8 @@ void yyerror(const char*);
   std::list<Expression*>* explist;
   Statement* statement;
   std::list<Statement*>* stlist;
+  Variable* variable;
+  Type type;
 }  
  
 // --------------------------------------------------------------------  
@@ -78,6 +80,8 @@ void yyerror(const char*);
 %type <statement> st_function
 %type <statement> st_list
 %type <stlist> stlist
+%type <variable> variable_dcl
+%type <type> type
 
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
@@ -91,7 +95,7 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
   
 program
-: statement
+: variable_dcl
 {
   $1->print(std::cout);
   std::cout << std::endl;
@@ -295,6 +299,22 @@ st_function
 {
   $$ = new St_function($1, *$3);
   delete $3;
+}
+
+variable_dcl
+: type lex_ID
+{
+  $$ = new Variable($1, $2);
+}
+
+type
+: lex_KW_INT
+{
+  $$ = Type_INT;
+}
+| lex_KW_CHAR
+{
+  $$ = Type_CHAR;
 }
 
 %%  

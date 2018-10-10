@@ -92,8 +92,10 @@ union YYSTYPE
   std::list<Expression*>* explist;
   Statement* statement;
   std::list<Statement*>* stlist;
+  Variable* variable;
+  Type type;
 
-#line 97 "parse.hpp" /* yacc.c:1909  */
+#line 99 "parse.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
