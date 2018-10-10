@@ -242,8 +242,10 @@ statement
   $$ = $1;
 }
 
-st_assign: {
-
+st_assign
+: exp_variable lex_EQ expression lex_SEMICOLON
+{
+  $$ = new St_assign($1, $3);
 }
 
 st_list: {
