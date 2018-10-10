@@ -166,6 +166,10 @@ expression4
 {
   $$ = $1;
 }
+| lex_LPAREN expression lex_RPAREN
+{
+  $$ = $2;
+}
 
 exp_variable
 : lex_ID
