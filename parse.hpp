@@ -94,8 +94,10 @@ union YYSTYPE
   std::list<Statement*>* stlist;
   Variable* variable;
   Type type;
+  Function* function;
+  std::list<Variable*>* varlist;
 
-#line 99 "parse.hpp" /* yacc.c:1909  */
+#line 101 "parse.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

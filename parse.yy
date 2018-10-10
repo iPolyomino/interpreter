@@ -36,7 +36,9 @@ void yyerror(const char*);
   std::list<Statement*>* stlist;
   Variable* variable;
   Type type;
-}  
+  Function* function;
+  std::list<Variable*>* varlist;
+}
  
 // --------------------------------------------------------------------  
 // [Part-3] トークンの宣言  
@@ -56,7 +58,7 @@ void yyerror(const char*);
 %token lex_LPAREN lex_RPAREN 
 %token lex_LBRACE lex_RBRACE  
 %token lex_LBRACK lex_RBRACK
-  
+
 %token <val> lex_INT lex_CHAR 
 %token <string> lex_ID
   
@@ -80,8 +82,12 @@ void yyerror(const char*);
 %type <statement> st_function
 %type <statement> st_list
 %type <stlist> stlist
+
 %type <variable> variable_dcl
 %type <type> type
+%type <function> function_dcl
+%type <varlist> argument_dcllist
+%type <varlist> variable_dcllist
 
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
@@ -95,7 +101,7 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
   
 program
-: variable_dcl
+: function_dcl
 {
   $1->print(std::cout);
   std::cout << std::endl;
@@ -315,6 +321,26 @@ type
 | lex_KW_CHAR
 {
   $$ = Type_CHAR;
+}
+
+function_dcl
+: type lex_ID lex_LPAREN argument_dcllist lex_RPAREN lex_LBRACE variable_dcllist st_list lex_RBRACE
+{
+  $$ = new Function($1, $2, *$4, *$7, $8);
+  delete $4;
+  delete $7;
+}
+
+argument_dcllist
+:
+{
+  $$ = new std::list<Variable*>;
+}
+
+variable_dcllist
+:
+{
+  $$ = new std::list<Variable*>;
 }
 
 %%  
