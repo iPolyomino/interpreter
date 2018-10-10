@@ -59,6 +59,7 @@ void yyerror(const char*);
 // [Part-4] 型の宣言 
 // -------------------------------------------------------------------- 
 
+%type <expression> expression3
 %type <expression> expression4
 %type <exp_variable> exp_variable
 
@@ -74,10 +75,20 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
   
 program
-: expression4
+: expression3
 {
   $1->print(std::cout);
   std::cout << std::endl;
+}
+
+expression3
+: expression4
+{
+  $$ = $1;
+}
+| expression3 lex_STAR expression4
+{
+  $$ = new Exp_operation2(Operator_MUL, $1, $3);
 }
 
 expression4
