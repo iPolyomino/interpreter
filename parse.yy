@@ -83,6 +83,10 @@ expression4
 {
   $$ = new Exp_constant(Type_INT, $1);
 }
+| lex_CHAR
+{
+  $$ = new Exp_constant(Type_CHAR, $1);
+}
 
 %%  
 // --------------------------------------------------------------------  
