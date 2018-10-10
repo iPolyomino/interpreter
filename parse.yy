@@ -284,8 +284,10 @@ st_while
   $$ = new St_while($3, $5);
 }
 
-st_return: {
-
+st_return
+: lex_KW_RETURN expression lex_SEMICOLON
+{
+  $$ = new St_return($2);
 }
 
 st_function: {
