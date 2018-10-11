@@ -19,6 +19,9 @@ extern std::FILE* yyin;
  
 int yylex(void);  
 void yyerror(const char*);
+
+Program* ast;
+Program* build_program(Declaration_t* dd);
   
 %} 
   
@@ -38,6 +41,7 @@ void yyerror(const char*);
   Type type;
   Function* function;
   std::list<Variable*>* varlist;
+  Declaration_t* declaration_data;
 }
  
 // --------------------------------------------------------------------  
@@ -89,6 +93,8 @@ void yyerror(const char*);
 %type <varlist> argument_dcllist
 %type <varlist> variable_dcllist
 
+%type <declaration_data> dcllist
+
 // --------------------------------------------------------------------  
 // [Part-5] 開始記号の宣言
 // --------------------------------------------------------------------  
@@ -101,10 +107,9 @@ void yyerror(const char*);
 // -------------------------------------------------------------------- 
   
 program
-: function_dcl
+: dcllist
 {
-  $1->print(std::cout);
-  std::cout << std::endl;
+  ast = build_program($1);
 }
 
 expression
@@ -358,6 +363,22 @@ variable_dcllist
   $$ = $1;
 }
 
+dcllist
+:
+{
+  $$ = new Declaration_t;
+}
+| dcllist variable_dcl lex_SEMICOLON
+{
+  $1->vars.push_back($2);
+  $$ = $1;
+}
+| dcllist function_dcl
+{
+  $1->funcs.push_back($2);
+  $$ = $1;
+}
+
 %%  
 // --------------------------------------------------------------------  
 // [Part-7] 関数本体の記述  
@@ -370,9 +391,26 @@ int main(int argc, char *argv[])
     linenum = 1;  // lex の行番号を 1 に初期設定 
     yyin = fp;    // lex のファイルポインタをセット  
     yyparse();    // 構文解析関数を呼び出す  
+    ast->print(std::cout);
   }  
   else { 
     printf("ファイル '%s' が開けません\n", argv[1]); 
   } 
 }  
 
+Program* build_program(Declaration_t* dd)
+{
+  std::list<Function*> flist;
+  Function* mainf;
+
+  std::list<Function*>::iterator f;
+  for (auto f: dd->funcs) {
+    if (f->name() == "main") {
+      mainf = f;
+    } else {
+      flist.push_back(f);
+    }
+  }
+
+  return new Program(dd->vars, flist, mainf);
+}

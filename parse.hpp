@@ -83,7 +83,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 29 "parse.yy" /* yacc.c:1909  */
+#line 32 "parse.yy" /* yacc.c:1909  */
  
   char* string;  
   int val;
@@ -96,8 +96,9 @@ union YYSTYPE
   Type type;
   Function* function;
   std::list<Variable*>* varlist;
+  Declaration_t* declaration_data;
 
-#line 101 "parse.hpp" /* yacc.c:1909  */
+#line 102 "parse.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
