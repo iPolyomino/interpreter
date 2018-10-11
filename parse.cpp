@@ -2029,7 +2029,7 @@ int main(int argc, char *argv[])
     linenum = 1;  // lex の行番号を 1 に初期設定 
     yyin = fp;    // lex のファイルポインタをセット  
     yyparse();    // 構文解析関数を呼び出す  
-    ast->print(std::cout);
+    ast->run();
   }  
   else { 
     printf("ファイル '%s' が開けません\n", argv[1]); 
