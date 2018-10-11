@@ -1,0 +1,3 @@
+int kansuu(int n)
+{
+}

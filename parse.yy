@@ -336,11 +336,26 @@ argument_dcllist
 {
   $$ = new std::list<Variable*>;
 }
+| variable_dcl
+{
+  $$ = new std::list<Variable*>;
+  $$->push_back($1);
+}
+| argument_dcllist lex_COMMA variable_dcl
+{
+  $1->push_back($3);
+  $$ = $1;
+}
 
 variable_dcllist
 :
 {
   $$ = new std::list<Variable*>;
+}
+| variable_dcllist variable_dcl lex_SEMICOLON
+{
+  $1->push_back($2);
+  $$ = $1;
 }
 
 %%  

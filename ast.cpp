@@ -560,6 +560,7 @@ void Function::print(std::ostream &os) const
       os << ", ";
     }
     arg->print(os);
+    isCommaRequired = true;
   }
   os << ") {" << std::endl;
   for (auto local_var : local_vars_)
